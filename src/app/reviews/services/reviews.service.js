@@ -33,6 +33,20 @@ exports.fetchReviews = async (queries) => {
             }
         };
 
+        const skipLimitAndSort = [{
+            $sort: {
+                [queries['sortBy']]: queries['sortOrder'] === 'ASC' ? 1 : -1
+            }
+        }];
+
+        if (queries.page !== 'all' && queries.size !== 'all') {
+            skipLimitAndSort.push({
+                $skip: (Number(queries.size)) * (Number(queries.page) - 1)
+            }, {
+                $limit: Number(queries.size)
+            })
+        }
+
         const project = {
             $project: {
                 _id: 0,
@@ -40,7 +54,7 @@ exports.fetchReviews = async (queries) => {
             }
         };
 
-        return await reviewsModel.aggregate([match, project]);
+        return await reviewsModel.aggregate([match, ...skipLimitAndSort, project]);
 
     } catch (e) {
         throw Error(e.errmsg || e.message || 'Error occured fetching reviews');

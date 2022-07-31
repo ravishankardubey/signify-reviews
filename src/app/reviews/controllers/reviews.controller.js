@@ -43,7 +43,11 @@ exports.fetchReviews = async (req, res, next) => {
             // reviewed_date: isNaN(Date.parse(req.query.reviewed_date)) ? null : new Date(req.query.reviewed_date),
             reviewed_date: req.query.reviewed_date ? new Date(req.query.reviewed_date) : null,
             review_source: req.query.review_source || null,
-            rating: Number(req.query.rating) || null
+            rating: Number(req.query.rating) || null,
+            page: req.query.page || 'all',
+            size: req.query.size || 'all',
+            sortBy: req.query.sortBy || 'reviewed_date',
+            sortOrder: req.query.sortOrder || 'DESC',
         };
 
         const data = await reviewService.fetchReviews(query);
