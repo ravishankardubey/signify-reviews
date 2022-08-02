@@ -5,20 +5,15 @@ const MONGODB = require('../src/database/mongodb.config');
 
 //Assertion style
 chai.should();
-// chai.expect();
 const expect = chai.expect;
 chai.use(chaiHttp);
 
 
 describe('REVIEWS: APIs', () => {
 
-    // before(function (done) {
-    //     // mongoose.connect('mongodb://localhost/test', done);
-    //     MONGODB.getConnection();
-
-    //     done();
-
-    // });
+    before(async function () {
+        await MONGODB.getConnection();
+    });
 
     describe('Bulk Save API', () => {
         it('Bulk Save Reviews for initial load', (done) => {
@@ -172,35 +167,35 @@ describe('REVIEWS: APIs', () => {
                 });
         });
 
-        // it('Fetch reviews in ascending order', (done) => {
-        //     const sortBy = 'reviewed_date';
-        //     const sortOrder = 'DESC';
-        //     const page = 10;
-        //     const size = 10;
+        it('Fetch reviews in ascending order', (done) => {
+            const sortBy = 'reviewed_date';
+            const sortOrder = 'DESC';
+            const page = 10;
+            const size = 10;
 
-        //     chai.request(server)
-        //         .get(`/api/reviews/fetch?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}&size=${size}`)
-        //         .end((err, res) => {
-        //             res.should.have.status(200);
-        //             res.body.should.be.a('object');
-        //             res.body.should.have.property('status').eq(200);
-        //             res.body.should.have.property('message').eq(`Fetched ${size} reviews successfully.`);
-        //             res.body.should.have.property('data');
-        //             res.body.data.should.be.an('array');
-        //             res.body.data.length.should.be.eq(size);
+            chai.request(server)
+                .get(`/api/reviews/fetch?sortBy=${sortBy}&sortOrder=${sortOrder}&page=${page}&size=${size}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.should.have.property('status').eq(200);
+                    res.body.should.have.property('message').eq(`Fetched ${size} reviews successfully.`);
+                    res.body.should.have.property('data');
+                    res.body.data.should.be.an('array');
+                    res.body.data.length.should.be.eq(size);
 
-        //             const isSortedFn = (array) => {
-        //                 for (let i = 1; i < array.length; i++) {
-        //                     if (array[i] > array[i - 1]) {
-        //                         return false;
-        //                     }
-        //                 }
-        //                 return true;
-        //             }
-        //             expect(isSortedFn(res.body.data)).to.be.true;
-        //             done();
-        //         });
-        // });
+                    const isSortedFn = (array) => {
+                        for (let i = 1; i < array.length; i++) {
+                            if (array[i] > array[i - 1]) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                    expect(isSortedFn(res.body.data)).to.be.true;
+                    done();
+                });
+        });
     });
 
     describe('Fetch Store average', () => {

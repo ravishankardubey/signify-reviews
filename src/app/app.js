@@ -18,9 +18,18 @@ app.use(bodyParser.urlencoded({
 
 app.options('*', CORS());
 app.use(CORS());
-
-MONGODB.getConnection();
-
 app.use(appRouter);
 
-module.exports = app.listen(process.env.PORT, () => console.log('Application Running on Port:', process.env.PORT));
+async function main() {
+    try {
+        MONGODB.getConnection().then((db) => {
+            console.log('Connected to MongoCloud');
+            app.listen(process.env.PORT, () => console.log('Application Running on Port:', process.env.PORT));
+        });
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+main();
+module.exports = app;
