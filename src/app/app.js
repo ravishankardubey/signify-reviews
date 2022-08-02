@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const appRouter = require('./app.router');
+const appRouter = require('./app.routes');
 const MONGODB = require('../database/mongodb.config');
 const CORS = require('cors');
 require('dotenv').config();
@@ -23,4 +23,4 @@ MONGODB.getConnection();
 
 app.use(appRouter);
 
-app.listen(process.env.PORT, () => console.log('Application Running on Port:', process.env.PORT));
+module.exports = app.listen(process.env.PORT, () => console.log('Application Running on Port:', process.env.PORT));
